@@ -1,0 +1,12 @@
+.env
+.env.local
+.env.*.local
+.python-version
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+.venv/
+*.egg-info/
+.DS_Store

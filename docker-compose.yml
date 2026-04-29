@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
+  event_processor:
+    build:
+      context: .
+      dockerfile: dockerfile
+    depends_on:
+      - redis
+    networks:
+      - app_network
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_DB: "0"
+      AMQP_URL: ${AMQP_URL}
+      CLICKHOUSE_HOST: ${CLICKHOUSE_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_DATABASE: ${DB_DATABASE}
+      MAX_OPERATION_TIME: ${MAX_OPERATION_TIME:-24}
+      STALE_CHECK_INTERVAL: ${STALE_CHECK_INTERVAL:-300}
+      MAX_REASONABLE_DURATION: ${MAX_REASONABLE_DURATION:-240}
+      AFTER_HOURS_OPERATION_CHECK: ${AFTER_HOURS_OPERATION_CHECK:-30}
+
+networks:
+  app_network:
+    driver: bridge
